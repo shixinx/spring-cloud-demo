@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    container_name: mysql-master
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+      LANG: C.UTF-8
+    ports:
+      - 3308:3306
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./data:/var/lib/mysql                           #放mysql主数据
+      - ./conf:/etc/mysql/conf.d                        #主配置文件
+      - ./bk:/opt/mysql/bk                              #mysql备份文件，可以mysqldump下来的备份文件放这
+
+  mysql_slave:
+    image: mysql:8
+    restart: always
+    container_name: mysql_slave
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+      LANG: C.UTF-8
+    ports:
+      - 3309:3306
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./data2:/var/lib/mysql                #mysql从数据文件
+      - ./conf2:/etc/mysql/conf.d             #从配置文件
